@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TrampolinePark {
+  id              String   @id
+  name            String
+  slug            String   @unique
+  description     String?
+  
+  // Address information
+  street          String
+  city            String
+  state           String
+  zipCode         String?
+  metroArea       String
+  formattedAddress String
+  
+  // Geographic coordinates
+  latitude        Float
+  longitude       Float
+  
+  // Contact information
+  phone           String?
+  website         String?
+  
+  // Business details
+  rating          Float?
+  reviewCount     Int?
+  
+  // Operating hours (stored as JSON)
+  hours           Json?
+  
+  // Features and amenities (stored as JSON arrays)
+  amenities       Json?
+  features        Json?
+  ageGroups       Json?
+  
+  // Pricing information (stored as JSON)
+  pricing         Json?
+  
+  // Images (stored as JSON array)
+  images          Json?
+  
+  // Metadata
+  lastUpdated     String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("trampoline_parks")
+}
