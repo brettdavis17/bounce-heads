@@ -26,6 +26,12 @@ const nextConfig = {
         port: '',
         pathname: '/v1/places/**/photos/**/media**',
       },
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+        port: '',
+        pathname: '/bounce-heads-images/**',
+      },
     ],
   },
 
