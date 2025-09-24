@@ -3,6 +3,7 @@ import PhotoGallery from '@/components/PhotoGallery';
 import ParkMap from '@/components/ParkMap';
 import Link from 'next/link';
 import { HeaderBannerAd, ContentAd, FooterAd } from '@/components/AdSense';
+import { PrismaClient } from '@prisma/client';
 
 interface ParkFromDB {
   id: string;
@@ -38,20 +39,50 @@ interface ParkPageProps {
   }>;
 }
 
+const prisma = new PrismaClient();
+
 async function getPark(slug: string): Promise<ParkFromDB | null> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/parks/${slug}`, {
-      cache: 'no-store' // Disable caching for now during development
+    const park = await prisma.trampolinePark.findUnique({
+      where: { slug }
     });
 
-    if (!response.ok) {
+    if (!park) {
       return null;
     }
 
-    return response.json();
+    return {
+      id: park.id,
+      name: park.name,
+      slug: park.slug,
+      description: park.description,
+      street: park.street,
+      city: park.city,
+      state: park.state,
+      zipCode: park.zipCode,
+      metroArea: park.metroArea,
+      formattedAddress: park.formattedAddress,
+      latitude: park.latitude,
+      longitude: park.longitude,
+      phone: park.phone,
+      website: park.website,
+      rating: park.rating,
+      reviewCount: park.reviewCount,
+      hours: park.hours,
+      amenities: park.amenities,
+      features: park.features,
+      ageGroups: park.ageGroups,
+      pricing: park.pricing,
+      images: park.images,
+      lastUpdated: park.lastUpdated,
+      createdAt: park.createdAt,
+      updatedAt: park.updatedAt
+    };
   } catch (error) {
     console.error('Error fetching park:', error);
     return null;
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
@@ -303,7 +334,9 @@ export default async function ParkPage({ params }: ParkPageProps) {
               ageGroups: Array.isArray(park.ageGroups) ? park.ageGroups : [],
               description: park.description || '',
               slug: park.slug,
-              lastUpdated: park.lastUpdated
+              lastUpdated: park.lastUpdated,
+              rating: park.rating || undefined,
+              reviewCount: park.reviewCount || undefined
             }} />
           </div>
         </div>
