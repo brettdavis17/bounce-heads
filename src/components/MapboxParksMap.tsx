@@ -33,8 +33,11 @@ export default function MapboxParksMap({ parks, metroName, className = '' }: Map
     const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
     if (!mapboxToken) {
       console.error('Mapbox access token is required. Please set NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN environment variable.');
+      console.error('Available env vars:', Object.keys(process.env).filter(key => key.startsWith('NEXT_PUBLIC')));
       return;
     }
+
+    console.log('Mapbox token found, initializing map for', validParks.length, 'parks in', metroName);
 
     mapboxgl.accessToken = mapboxToken;
 
