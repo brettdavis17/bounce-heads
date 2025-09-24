@@ -98,11 +98,9 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
                 }}
               />
 
-              {/* Loading overlay */}
+              {/* Subtle loading indicator - only shows briefly */}
               {!loadedImages.has(index) && !imageErrors.has(index) && (
-                <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
-                  <div className="text-gray-500 text-sm">Loading...</div>
-                </div>
+                <div className="absolute inset-0 bg-gray-50 opacity-50"></div>
               )}
 
               {/* Error overlay */}
