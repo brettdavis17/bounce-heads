@@ -37,13 +37,17 @@ export default function OptimizedImage({
   // For Google Places API URLs and our proxy API, use regular img tag to avoid Next.js optimization
   const isGooglePlacesUrl = src.includes('places.googleapis.com') || src.includes('maps.googleapis.com') || src.startsWith('/api/photo');
 
+  // Google Cloud Storage URLs should use Next.js Image for optimization
+  const isGoogleCloudStorage = src.includes('storage.googleapis.com');
+
   // Debug logging
   console.log('OptimizedImage src:', src);
   console.log('isGooglePlacesUrl:', isGooglePlacesUrl);
+  console.log('isGoogleCloudStorage:', isGoogleCloudStorage);
   console.log('src.startsWith("/api/"):', src.startsWith('/api/'));
   console.log('src.startsWith("/images/"):', src.startsWith('/images/'));
   console.log('Should use regular img:', isGooglePlacesUrl || src.startsWith('/api/') || src.startsWith('/images/'));
-  console.log('Using Next.js Image:', !(isGooglePlacesUrl || src.startsWith('/api/') || src.startsWith('/images/')));
+  console.log('Should use Next.js Image:', isGoogleCloudStorage || !(isGooglePlacesUrl || src.startsWith('/api/') || src.startsWith('/images/')));
 
   if (hasError) {
     return (
@@ -57,8 +61,8 @@ export default function OptimizedImage({
     );
   }
 
-  // Use regular img tag for proxy URLs, Google Places URLs, and local images
-  if (isGooglePlacesUrl || src.startsWith('/api/') || src.startsWith('/images/')) {
+  // Use regular img tag for proxy URLs, Google Places URLs, and local images (but not Google Cloud Storage)
+  if ((isGooglePlacesUrl || src.startsWith('/api/') || src.startsWith('/images/')) && !isGoogleCloudStorage) {
     return (
       <div className={fill ? 'relative w-full h-full' : ''}>
         {isLoading && (
@@ -87,7 +91,7 @@ export default function OptimizedImage({
     );
   }
 
-  // For non-Google URLs, we can safely use Next.js Image
+  // For Google Cloud Storage and other external URLs, use Next.js Image with proper configuration
   const Image = require('next/image').default;
 
   return (
@@ -100,6 +104,7 @@ export default function OptimizedImage({
       priority={priority}
       onClick={onClick}
       onError={handleError}
+      onLoad={handleLoad}
     />
   );
 }
