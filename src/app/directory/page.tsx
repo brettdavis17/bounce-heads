@@ -73,13 +73,24 @@ export default function DirectoryPage() {
       <header className="bg-white/90 backdrop-blur-sm shadow-lg border-b border-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <nav className="flex justify-between items-center">
-            <div>
-              <Link href="/" className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 bg-clip-text text-transparent hover:from-purple-600 hover:via-orange-500 hover:to-red-500">
-                Trampoline Parks Directory
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="inline-block">
+                <img
+                  src="/wordmark.png"
+                  alt="Trampoline Parks Directory"
+                  width={300}
+                  height={100}
+                  className="h-12 w-auto"
+                />
               </Link>
-              <p className="mt-2 text-lg text-gray-700 font-medium">
-                Find the best trampoline parks across the United States
-              </p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-3">
+              <Link
+                href="/browse-by-location"
+                className="btn border-2 border-blue-600 text-blue-600 px-6 py-2 rounded-lg hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white font-semibold shadow-md hover:shadow-lg transform hover:scale-105"
+              >
+                Browse by Location
+              </Link>
             </div>
           </nav>
         </div>

@@ -101,12 +101,34 @@ export default async function BrowseByLocationPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-orange-50">
       <header className="bg-white/90 backdrop-blur-sm shadow-lg border-b border-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <nav className="flex justify-between items-center mb-4">
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="inline-block">
+                <img
+                  src="/wordmark.png"
+                  alt="Trampoline Parks Directory"
+                  width={300}
+                  height={100}
+                  className="h-12 w-auto"
+                />
+              </Link>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-3">
+              <Link
+                href="/directory"
+                className="btn gradient-primary text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl font-semibold transform hover:scale-105"
+              >
+                Find Parks
+              </Link>
+            </div>
+          </nav>
+
           <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
             <Link href="/" className="hover:text-blue-600">Home</Link>
             <span>›</span>
             <span className="text-gray-900 font-medium">Browse by Location</span>
           </nav>
-          
+
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
               Browse Trampoline Parks by Location

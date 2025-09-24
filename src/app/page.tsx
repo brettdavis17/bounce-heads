@@ -6,13 +6,16 @@ export default function Home() {
       <header className="bg-white/90 backdrop-blur-sm shadow-lg border-b border-blue-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-10">
           <nav className="flex justify-between items-center">
-            <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-orange-500 bg-clip-text text-transparent">
-                Trampoline Parks Directory
-              </h1>
-              <p className="mt-2 text-lg text-gray-700 font-medium">
-                Your complete guide to trampoline parks across America
-              </p>
+            <div className="flex items-center space-x-4">
+              <Link href="/" className="inline-block">
+                <img
+                  src="/wordmark.png"
+                  alt="Trampoline Parks Directory"
+                  width={300}
+                  height={100}
+                  className="h-16 w-auto"
+                />
+              </Link>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-3">
               <Link

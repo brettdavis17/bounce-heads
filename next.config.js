@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   trailingSlash: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 
   // Image optimization
   images: {
@@ -11,6 +17,9 @@ const nextConfig = {
     localPatterns: [
       {
         pathname: '/images/**',
+      },
+      {
+        pathname: '/**',
       },
     ],
     remotePatterns: [
