@@ -77,14 +77,36 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
               className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gray-200 cursor-pointer group"
               onClick={() => openLightbox(index)}
             >
-              {/* Loading state */}
+              {/* Simple image with background color fallback */}
+              <img
+                src={image}
+                alt={`${parkName} - Photo ${index + 1}`}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                onLoad={() => {
+                  console.log(`Image ${index} loaded successfully:`, image);
+                  handleImageLoad(index);
+                }}
+                onError={(e) => {
+                  console.error(`Image ${index} failed to load:`, image, e);
+                  handleImageError(index);
+                }}
+                loading={index < 4 ? 'eager' : 'lazy'}
+                crossOrigin="anonymous"
+                style={{
+                  backgroundColor: '#f3f4f6', // Gray fallback
+                  minHeight: '100%',
+                  display: 'block'
+                }}
+              />
+
+              {/* Loading overlay */}
               {!loadedImages.has(index) && !imageErrors.has(index) && (
                 <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">
                   <div className="text-gray-500 text-sm">Loading...</div>
                 </div>
               )}
 
-              {/* Error state */}
+              {/* Error overlay */}
               {imageErrors.has(index) && (
                 <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
                   <div className="text-center text-gray-500">
@@ -96,19 +118,7 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
                 </div>
               )}
 
-              {/* Actual image */}
-              <img
-                src={image}
-                alt={`${parkName} - Photo ${index + 1}`}
-                className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-200 ${
-                  loadedImages.has(index) ? 'opacity-100' : 'opacity-0'
-                }`}
-                onLoad={() => handleImageLoad(index)}
-                onError={() => handleImageError(index)}
-                loading={index < 4 ? 'eager' : 'lazy'}
-              />
-
-              {/* Hover overlay */}
+              {/* Hover overlay - only show when image is loaded */}
               {loadedImages.has(index) && !imageErrors.has(index) && (
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-200 flex items-center justify-center">
                   <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity">
@@ -200,6 +210,7 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
                 }`}
                 onLoad={() => handleImageLoad(selectedImageIndex)}
                 onError={() => handleImageError(selectedImageIndex)}
+                crossOrigin="anonymous"
               />
             </div>
           </div>
@@ -222,6 +233,7 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
                   alt={`Thumbnail ${index + 1}`}
                   className="w-full h-full object-cover"
                   loading="lazy"
+                  crossOrigin="anonymous"
                 />
               </button>
             ))}
