@@ -41,13 +41,13 @@ export function convertToProxyPhotoUrl(googlePhotoUrl: string): string {
 }
 
 /**
- * Converts an array of photo URLs - return them directly for now
+ * Converts an array of photo URLs to use proxy for CORS issues
  */
 export function convertPhotoUrls(photoUrls: string[]): string[] {
   return photoUrls.map(url => {
-    // Handle Google Cloud Storage URLs - return directly
+    // Handle Google Cloud Storage URLs - use proxy for CORS
     if (url.startsWith('https://storage.googleapis.com/')) {
-      return url; // Try direct access first
+      return `/api/image/?url=${encodeURIComponent(url)}`;
     }
     // Handle Google Places API URLs
     return convertToProxyPhotoUrl(url);
@@ -90,9 +90,9 @@ export function convertPhotoObjectsToUrls(photos: any[], maxWidth = 400, maxHeig
   return photos
     .filter(photo => photo && (photo.path || photo.name))
     .map(photo => {
-      // New format: Google Cloud Storage paths - return directly
+      // New format: Google Cloud Storage paths - use proxy for CORS
       if (photo.path && photo.path.startsWith('https://storage.googleapis.com/')) {
-        return photo.path; // Direct access
+        return `/api/image/?url=${encodeURIComponent(photo.path)}`;
       }
       // New format: other local file paths
       if (photo.path) {

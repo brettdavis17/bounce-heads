@@ -91,7 +91,6 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
                   handleImageError(index);
                 }}
                 loading={index < 4 ? 'eager' : 'lazy'}
-                crossOrigin="anonymous"
                 style={{
                   backgroundColor: '#f3f4f6', // Gray fallback
                   minHeight: '100%',
@@ -210,7 +209,6 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
                 }`}
                 onLoad={() => handleImageLoad(selectedImageIndex)}
                 onError={() => handleImageError(selectedImageIndex)}
-                crossOrigin="anonymous"
               />
             </div>
           </div>
@@ -233,8 +231,7 @@ export default function ImageGallery({ images, parkName }: ImageGalleryProps) {
                   alt={`Thumbnail ${index + 1}`}
                   className="w-full h-full object-cover"
                   loading="lazy"
-                  crossOrigin="anonymous"
-                />
+                  />
               </button>
             ))}
           </div>
