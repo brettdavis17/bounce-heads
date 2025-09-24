@@ -40,8 +40,15 @@ export default function AdSense({
     }
   }, []);
 
-  // In development, show a placeholder
-  if (process.env.NODE_ENV === 'development' && process.env.NEXT_PUBLIC_ADSENSE_ENABLED !== 'true') {
+  // Show placeholder when AdSense is enabled for testing but no real client ID is set
+  const showPlaceholder = process.env.NEXT_PUBLIC_ADSENSE_ENABLED === 'true' &&
+                          !process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_CLIENT_ID;
+
+  // Also show placeholder in development unless AdSense is fully configured
+  const showDevPlaceholder = process.env.NODE_ENV === 'development' &&
+                            process.env.NEXT_PUBLIC_ADSENSE_ENABLED !== 'false';
+
+  if (showPlaceholder || showDevPlaceholder) {
     return (
       <div
         className={`bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center ${className}`}
@@ -51,6 +58,9 @@ export default function AdSense({
           <div className="text-gray-500 text-sm font-medium mb-2">AdSense Placeholder</div>
           <div className="text-gray-400 text-xs">Slot: {adSlot}</div>
           <div className="text-gray-400 text-xs">Format: {adFormat}</div>
+          <div className="text-gray-400 text-xs">
+            {process.env.NODE_ENV === 'production' ? 'Production' : 'Development'}
+          </div>
         </div>
       </div>
     );
