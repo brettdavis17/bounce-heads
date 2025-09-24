@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import MapboxParksMap from '@/components/MapboxParksMap';
 import { HeaderBannerAd, ContentAd, FooterAd } from '@/components/AdSense';
+import { PrismaClient } from '@prisma/client';
 
 interface ParkFromDB {
   id: string;
@@ -44,18 +45,11 @@ function slugToMetroArea(slug: string): string {
     .join(' ');
 }
 
+const prisma = new PrismaClient();
+
 async function getParksInMetro(metroSlug: string): Promise<ParkFromDB[]> {
   try {
     const metroArea = slugToMetroArea(metroSlug);
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/parks`, {
-      cache: 'no-store'
-    });
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const allParks = await response.json();
 
     // Filter parks by metro area (case insensitive, handle hyphens and spaces)
     const normalizeForComparison = (str: string) =>
@@ -63,14 +57,51 @@ async function getParksInMetro(metroSlug: string): Promise<ParkFromDB[]> {
 
     const normalizedMetroArea = normalizeForComparison(metroArea);
 
-    return allParks.filter((park: ParkFromDB) => {
+    const allParks = await prisma.trampolinePark.findMany({
+      orderBy: [
+        { rating: 'desc' },
+        { name: 'asc' }
+      ]
+    });
+
+    const filteredParks = allParks.filter((park) => {
       const normalizedParkMetro = normalizeForComparison(park.metroArea);
       return normalizedParkMetro.includes(normalizedMetroArea) ||
              normalizedMetroArea.includes(normalizedParkMetro);
     });
+
+    return filteredParks.map(park => ({
+      id: park.id,
+      name: park.name,
+      slug: park.slug,
+      description: park.description,
+      street: park.street,
+      city: park.city,
+      state: park.state,
+      zipCode: park.zipCode,
+      metroArea: park.metroArea,
+      formattedAddress: park.formattedAddress,
+      latitude: park.latitude,
+      longitude: park.longitude,
+      phone: park.phone,
+      website: park.website,
+      rating: park.rating,
+      reviewCount: park.reviewCount,
+      hours: park.hours,
+      amenities: park.amenities,
+      features: park.features,
+      ageGroups: park.ageGroups,
+      pricing: park.pricing,
+      images: park.images,
+      lastUpdated: park.lastUpdated,
+      createdAt: park.createdAt,
+      updatedAt: park.updatedAt
+    }));
   } catch (error) {
     console.error('Error fetching parks:', error);
     return [];
+  } finally {
+    await prisma.$disconnect();
   }
 }
 

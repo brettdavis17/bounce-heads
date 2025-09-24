@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { HeaderBannerAd, ContentAd, FooterAd } from '@/components/AdSense';
+import { PrismaClient } from '@prisma/client';
 
 interface ParkFromDB {
   id: string;
@@ -33,20 +34,49 @@ function createSlug(name: string): string {
   return name.toLowerCase().replace(/\s+/g, '-');
 }
 
+const prisma = new PrismaClient();
+
 async function getParks(): Promise<ParkFromDB[]> {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/api/parks`, {
-      cache: 'no-store'
+    const parks = await prisma.trampolinePark.findMany({
+      orderBy: [
+        { rating: 'desc' },
+        { name: 'asc' }
+      ]
     });
 
-    if (!response.ok) {
-      return [];
-    }
-
-    return response.json();
+    return parks.map(park => ({
+      id: park.id,
+      name: park.name,
+      slug: park.slug,
+      description: park.description,
+      street: park.street,
+      city: park.city,
+      state: park.state,
+      zipCode: park.zipCode,
+      metroArea: park.metroArea,
+      formattedAddress: park.formattedAddress,
+      latitude: park.latitude,
+      longitude: park.longitude,
+      phone: park.phone,
+      website: park.website,
+      rating: park.rating,
+      reviewCount: park.reviewCount,
+      hours: park.hours,
+      amenities: park.amenities,
+      features: park.features,
+      ageGroups: park.ageGroups,
+      pricing: park.pricing,
+      images: park.images,
+      lastUpdated: park.lastUpdated,
+      createdAt: park.createdAt,
+      updatedAt: park.updatedAt
+    }));
   } catch (error) {
     console.error('Error fetching parks:', error);
     return [];
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
