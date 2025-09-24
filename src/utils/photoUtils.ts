@@ -41,10 +41,17 @@ export function convertToProxyPhotoUrl(googlePhotoUrl: string): string {
 }
 
 /**
- * Converts an array of Google photo URLs to proxy URLs
+ * Converts an array of photo URLs to proxy URLs
  */
 export function convertPhotoUrls(photoUrls: string[]): string[] {
-  return photoUrls.map(convertToProxyPhotoUrl);
+  return photoUrls.map(url => {
+    // Handle Google Cloud Storage URLs
+    if (url.startsWith('https://storage.googleapis.com/')) {
+      return `/api/image?url=${encodeURIComponent(url)}`;
+    }
+    // Handle Google Places API URLs
+    return convertToProxyPhotoUrl(url);
+  });
 }
 
 /**
@@ -83,7 +90,11 @@ export function convertPhotoObjectsToUrls(photos: any[], maxWidth = 400, maxHeig
   return photos
     .filter(photo => photo && (photo.path || photo.name))
     .map(photo => {
-      // New format: local file paths
+      // New format: Google Cloud Storage paths - use proxy for CORS
+      if (photo.path && photo.path.startsWith('https://storage.googleapis.com/')) {
+        return `/api/image?url=${encodeURIComponent(photo.path)}`;
+      }
+      // New format: other local file paths
       if (photo.path) {
         return photo.path;
       }
