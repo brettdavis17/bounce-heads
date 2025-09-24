@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import PhotoGallery from '@/components/PhotoGallery';
+import ImageGallery from '@/components/ImageGallery';
 import ParkMap from '@/components/ParkMap';
 import Link from 'next/link';
 import { HeaderBannerAd, ContentAd, FooterAd } from '@/components/AdSense';
@@ -344,8 +344,7 @@ export default async function ParkPage({ params }: ParkPageProps) {
         {/* Photos Section */}
         {park.images && Array.isArray(park.images) && park.images.length > 0 && (
           <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Photos</h2>
-            <PhotoGallery images={park.images} parkName={park.name} />
+            <ImageGallery images={park.images} parkName={park.name} />
           </div>
         )}
 
